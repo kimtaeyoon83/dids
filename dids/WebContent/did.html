@@ -1,0 +1,353 @@
+<html>
+<head>
+    <title>DID Test Page</title>
+    <meta charset=utf-8>
+    <meta name="viewport" content="width = device-width, initial-scale = 1">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css"
+        integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>    
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    <script type="text/javascript" src="ethereumjs-util.js"></script>
+    <style>
+        .header {
+            margin: 0;
+            color: #333;
+            text-align: center;
+            padding: 2.5em 2em 0;
+            border-bottom: 1px solid #eee;
+        }
+​
+        .header h1 {
+            margin: 0.2em 0;
+            font-size: 3em;
+            font-weight: 300;
+        }
+​
+        .header h2 {
+            font-weight: 300;
+            color: #ccc;
+            padding: 0;
+            margin-top: 0;
+        }
+​
+        .content-subhead {
+            margin: 50px 0 20px 0;
+            font-weight: 300;
+            color: #888;
+        }
+​
+        .content {
+            margin: 0 auto;
+            padding: 0 2em;
+            max-width: 800px;
+            margin-bottom: 50px;
+            line-height: 1.6em;
+        }
+    </style>
+​
+    <script>
+		function prettier(ddoc){
+		    let ddoc2 = Object.assign({}, ddoc);
+		    delete ddoc2[0];
+		    delete ddoc2[1];
+		    delete ddoc2[2];
+		    return ddoc2;
+		}
+
+        $(document).ready(async function () {        	
+        	ethereum.enable;
+            web3 = new Web3(web3.currentProvider);
+            let mMAccount = await web3.eth.getAccounts();
+            let myAccount = mMAccount[0];
+            let ddoc; //for check is it registed
+            let isReg; //flag
+            let regDoc; //if registed, get it.
+            let ddoc2; //final
+            
+        	const address = "0x3B9ed38f9d12e93665230cd59f73aFBA640C93dC";
+            let myABI=[{inputs:[],payable:false,stateMutability:"nonpayable",type:"constructor"},{constant:true,inputs:[],name:"owner",outputs:[{internalType:"address",name:"",type:"address"}],payable:false,stateMutability:"view",type:"function"},{constant:true,inputs:[],name:"myadd",outputs:[{internalType:"address",name:"myAddr",type:"address"}],payable:false,stateMutability:"view",type:"function"},{constant:true,inputs:[],name:"createId",outputs:[{internalType:"string",name:"id",type:"string"}],payable:false,stateMutability:"view",type:"function"},{constant:true,inputs:[],name:"getMyaddress",outputs:[{internalType:"string",name:"id",type:"string"}],payable:false,stateMutability:"view",type:"function"},{constant:true,inputs:[{internalType:"address",name:"account",type:"address"}],name:"toString",outputs:[{internalType:"string",name:"",type:"string"}],payable:false,stateMutability:"pure",type:"function"},{constant:true,inputs:[{internalType:"uint256",name:"value",type:"uint256"}],name:"toString",outputs:[{internalType:"string",name:"",type:"string"}],payable:false,stateMutability:"pure",type:"function"},{constant:true,inputs:[{internalType:"bytes",name:"data",type:"bytes"}],name:"toString",outputs:[{internalType:"string",name:"",type:"string"}],payable:false,stateMutability:"pure",type:"function"},{constant:true,inputs:[{internalType:"bytes32",name:"value",type:"bytes32"}],name:"toString",outputs:[{internalType:"string",name:"",type:"string"}],payable:false,stateMutability:"pure",type:"function"},{constant:true,inputs:[{internalType:"string",name:"pub",type:"string"}],name:"createDoc",outputs:[{components:[{internalType:"string",name:"id",type:"string"},{internalType:"string",name:"public_key",type:"string"},{internalType:"string",name:"signed",type:"string"}],internalType:"struct dids.did_document",name:"dd",type:"tuple"}],payable:false,stateMutability:"view",type:"function"},{constant:true,inputs:[{internalType:"bytes",name:"msgHash",type:"bytes"},{internalType:"uint8",name:"v",type:"uint8"},{internalType:"bytes32",name:"r",type:"bytes32"},{internalType:"bytes32",name:"s",type:"bytes32"}],name:"recoverAdd",outputs:[{internalType:"address",name:"",type:"address"}],payable:false,stateMutability:"pure",type:"function"},{constant:true,inputs:[{internalType:"address",name:"addr",type:"address"},{internalType:"bytes",name:"msgHash",type:"bytes"},{internalType:"uint8",name:"v",type:"uint8"},{internalType:"bytes32",name:"r",type:"bytes32"},{internalType:"bytes32",name:"s",type:"bytes32"}],name:"verify",outputs:[{internalType:"bool",name:"",type:"bool"}],payable:false,stateMutability:"pure",type:"function"},{constant:false,inputs:[{components:[{internalType:"string",name:"id",type:"string"},{internalType:"string",name:"public_key",type:"string"},{internalType:"string",name:"signed",type:"string"}],internalType:"struct dids.did_document",name:"dDoc",type:"tuple"},{internalType:"bytes",name:"hash",type:"bytes"},{internalType:"uint8",name:"v",type:"uint8"},{internalType:"bytes32",name:"r",type:"bytes32"},{internalType:"bytes32",name:"s",type:"bytes32"}],name:"RegisterDid",outputs:[{internalType:"bool",name:"_isRegist",type:"bool"}],payable:false,stateMutability:"nonpayable",type:"function"},{constant:true,inputs:[{internalType:"string",name:"did",type:"string"}],name:"getDdoc",outputs:[{components:[{internalType:"string",name:"id",type:"string"},{internalType:"string",name:"public_key",type:"string"},{internalType:"string",name:"signed",type:"string"}],internalType:"struct dids.did_document",name:"",type:"tuple"}],payable:false,stateMutability:"view",type:"function"},{constant:false,inputs:[{internalType:"string",name:"id",type:"string"},{internalType:"bytes",name:"hash",type:"bytes"},{internalType:"uint8",name:"v",type:"uint8"},{internalType:"bytes32",name:"r",type:"bytes32"},{internalType:"bytes32",name:"s",type:"bytes32"}],name:"deleteDid",outputs:[{internalType:"bool",name:"_isChanged",type:"bool"}],payable:false,stateMutability:"nonpayable",type:"function"},{constant:false,inputs:[{components:[{internalType:"string",name:"id",type:"string"},{internalType:"string",name:"public_key",type:"string"},{internalType:"string",name:"signed",type:"string"}],internalType:"struct dids.did_document",name:"dDoc",type:"tuple"},{internalType:"bytes",name:"hash",type:"bytes"},{internalType:"uint8",name:"v",type:"uint8"},{internalType:"bytes32",name:"r",type:"bytes32"},{internalType:"bytes32",name:"s",type:"bytes32"}],name:"updateDdoc",outputs:[{internalType:"bool",name:"_isUpdate",type:"bool"}],payable:false,stateMutability:"nonpayable",type:"function"}];
+            
+            const myContract = new web3.eth.Contract(myABI, address, {
+        		from : myAccount,
+        		gasPrice : '20000000000'
+        	});
+            console.log("my account ", myAccount);
+            
+        	await myContract.methods.createDoc("asdf").call({from : myAccount}, (err,res) => {
+        		if(err)	console.log(err);
+        		else ddoc = res;
+        	});
+            
+            await myContract.methods.getDdoc(ddoc.id).call({from : myAccount}, (err, res) => {
+            	if(err){
+        			isReg = false;
+        			console.log("did document not found!")
+        		} else {
+        			isReg = true;
+        			regDoc = res;
+        		}
+            }).catch(error => {
+            	console.log(error);
+            });
+            
+			ddoc2 = prettier(regDoc);
+			if(isReg) {
+				console.log("Your did is already registed")
+				document.getElementById("didCreateBtn").style.display = "none";
+				$("#eth-diddoc").val(JSON.stringify(ddoc2));
+			}
+            
+            //DID 생성 및 등록 요청
+            $("#didCreateBtn").click(async function () {
+                let ethAddress = $("#eth-address").val();
+                let pubkey = $('#eth-pubkey').val();
+                let pri = $('#eth-prikey').val();
+                let regitDdoc;
+                let docstr;
+                
+                if(pubkey == "" || pri == ""){
+                	alert("키를 입력해주세요.");
+                    return false;
+                }
+                if(ethAddress == ""){
+                    alert("Ethereum Address가 세팅되지 않았습니다.");
+                    return false;
+                } else if(ethAddress != myAccount){
+                	alert("올바른 메타마스크의 주소가 아닙니다.")
+                	return false;
+                } else if (ethAddress == myAccount) {
+                	myContract.methods.createDoc(pubkey).call({from : myAccount}, async function (err,res) {
+                		if(err){
+                			console.log(err);
+                		} else{
+                			regitDdoc = prettier(res);
+                			delete regitDdoc.signed;
+                        	docstr = JSON.stringify(regitDdoc);
+                        	const hash = "0x" + EthJS.Util.keccak256(docstr).toString('hex');
+                        	
+                        	let signatureForRegist = web3.eth.accounts.sign(hash, pri);
+                        	let signature = web3.eth.accounts.sign(docstr, pri);
+                        	regitDdoc.signed = signature.signature;
+                        	console.log(regitDdoc);
+                        	let v = signatureForRegist.v;
+                        	let s = signatureForRegist.s;
+                        	let r = signatureForRegist.r;
+                        	
+                            const recoverAddress = await myContract.methods.recoverAdd(hash, v, r, s).call({from: myAccount}, (err,res) =>{
+                            	console.log("rec : ", res);
+                            	console.log("org : ", myAccount);
+                            });
+                        	
+                        	let isRegist = await myContract.methods.RegisterDid(regitDdoc, hash, v, r, s).send({from: myAccount}, (err,res) =>{
+                            	console.log("in the isRegist");
+                            }).then(function(res){
+                            	console.log("Register Success? : ", res);
+                            }).catch(function(err){
+                            	console.log("Register Failed..");
+                            });
+                        	
+                        	console.log("regitDdoc.id - ", regitDdoc.id);
+                        	let getDdoc = await myContract.methods.getDdoc(regitDdoc.id).call({from: myAccount}, (err,res) =>{
+                        		console.log("Register did document and get it");
+                            	if(err){
+                            		console.log(err);
+                            	}else{
+                            		console.log("success! ",res);
+                            	}
+                            });
+                        	ddoc2 = prettier(getDdoc);
+                        	$("#eth-diddoc").val(JSON.stringify(ddoc2));
+                        	document.getElementById("didCreateBtn").style.display = "none";
+                		}
+                	});
+                	
+                }
+                return false;
+            });
+            
+            //DID 기반 서명 생성 
+            $("#sigCreateBtn").click(function () {
+                //DID 생성 여부 체크 
+                let ethDid = $("#eth-did").val();
+                console.log(ethDid);
+                if(ethDid == ""){
+                    alert("DID를 먼저 등록해주세요.");
+                    return false;
+                }
+
+                let prikey = $("#eth-prikey2").val();
+                if(prikey == ""){
+                	alert("개인키를 입력하세요");
+                	return false;
+                }
+                
+                //서명원문 입력 여부 체크
+                var signSource = $("#did-sigsource").val();
+                if(signSource == "") {
+                    alert("서명 원문값을 입력해주세요.");
+                    return false;
+                }
+                
+                let signature = web3.eth.accounts.sign(signSource, prikey);
+			    $("#did-sigdata").val(signature.signature);
+                return false;
+            });
+            
+            //서명값 검증
+            $("#verifySigBtn").click(async function () {
+                //서명원문 입력 여부 체크
+                var verifyDid = $("#verify-did").val();
+                if(verifyDid == ""){
+                    alert("검증할 DID 입력해주세요.");
+                    return false;
+                }
+                var verifySource = $("#verify-source").val();
+                if(verifySource == ""){
+                    alert("검증할 서명원문 입력해주세요.");
+                    return false;
+                }
+                var verifySig = $("#verify-sig").val();
+                if(verifySig == ""){
+                    alert("검증할 서명값 입력해주세요.");
+                    return false;
+                }
+                //verifying did
+                let verifyDoc;
+                
+                await myContract.methods.getDdoc(verifyDid).call({from: myAccount}, async function(err,res) {
+                        		console.log("Register did document and get it : ", verifyDid);
+                            	if(err){
+                            		console.log("document not found");
+                            	}else{
+                            		let sig = res.signed;
+                            		verifyDoc = prettier(res);
+                            		delete verifyDoc.signed;
+                            		let retrievedID;
+                            		console.log("getting did document : ", verifyDoc);
+                            		await web3.eth.personal.ecRecover(JSON.stringify(verifyDoc), sig, (err, res) => {
+                            			if(err){
+                            				console.log("err!!!");
+                            				$("#verify-result").val('false');
+                            				return false;
+                            			}else{
+                            				console.log("retrived ID : ", res);
+                            				retrievedID = res;
+                            			}
+                            		});
+                            		let token = verifyDoc.id.split(':');
+                            		console.log("token : ", token);
+                            		if(token != retrievedID) return false;
+                            		else console.log("valid did");
+                            	}
+							});
+                
+                //원문메시지, 해시값 비교
+                await web3.eth.personal.ecRecover(verifySource, verifySig, (err, res) => {
+        			if(err){
+        				$("#verify-result").val('false');
+        				console.log("err!!!");
+        				return false;
+        			} else {
+        				console.log("message verifying result : ", res);
+        				let tok = verifyDoc.id.split(':');
+        				console.log("compared with : ", tok[2]);
+        				if(tok[2] == res) $("#verify-result").val('true');
+        				else $("#verify-result").val('false');
+                        return false;
+        			}
+        		});
+            });
+            //metamask에서 getAccount를 통해 가져오 주소값 세팅 
+            $("#eth-address").val(myAccount);
+            
+            //did값이 이미 생성되어 있으면 DID ID값 세팅 
+            $("#eth-did").val(ddoc.id);
+        });
+    </script>
+</head>
+​
+​
+<body>
+    <div class="content">
+        <h2 class="content-subhead">Ethereum DID Test Page</h2>
+        <div class="pure-form pure-form-aligned">
+            <fieldset>
+                <legend>DID 정보</legend>
+                <div class="pure-control-group">
+                    <label for="eth-address">Ethereum Address</label>
+                    <input class="pure-input-1-2" type="text" id="eth-address" />
+                </div>
+​
+				<div class="pure-control-group">
+                    <label for="eth-prikey">Metamask Private Key </label>
+                    <input class="pure-input-1-2" type="text" id="eth-prikey" />
+                </div>
+
+                <div class="pure-control-group">
+                    <label for="eth-pubkey">Public Key </label>
+                    <input class="pure-input-1-2" type="text" id="eth-pubkey" />
+                </div>
+                
+                <div class="pure-control-group">
+                    <label for="eth-did">DID </label>
+                    <input class="pure-input-1-2" type="text" id="eth-did" />
+                    <button id="didCreateBtn" class="pure-button pure-button-primary">등록</button>
+                </div>
+​
+                <div class="pure-control-group">
+                    <label for="eth-diddoc">DID Document</label>
+                    <textarea id="eth-diddoc" rows="6" cols="90">
+                </textarea>
+                </div>
+​
+            </fieldset>
+​
+            <fieldset>
+                <legend>검증정보 생성</legend>
+                <div class="pure-control-group">
+                    <label for="did-sigsource">서명원문</label>
+                    <input class="pure-input-1-2" type="text" id="did-sigsource" />
+                    <button id="sigCreateBtn" class="pure-button pure-button-primary">생성</button>
+                </div>
+                
+                <div class="pure-control-group">
+                    <label for="eth-prikey2">Private Key </label>
+                    <input class="pure-input-1-2" type="text" id="eth-prikey2" />
+                </div>
+​
+                <div class="pure-control-group">
+                    <label for="did-sigdata">서명문</label>
+                    <textarea id="did-sigdata" rows="6" cols="90">
+                </textarea>
+                </div>
+            </fieldset>
+​
+            <fieldset>
+                <legend>DID 검증정보 검증</legend>
+                <div class="pure-control-group">
+                    <label for="verify-did">DID</label>
+                    <input class="pure-input-1-2" type="text" id="verify-did" />
+                </div>
+                
+                <div class="pure-control-group">
+                    <label for="verify-source">서명원문</label>
+                    <input class="pure-input-1-2" type="text" id="verify-source" />
+                </div>
+                
+                <div class="pure-control-group">
+                    <label for="verify-sig">서명값</label>
+                    <input class="pure-input-1-2" type="text" id="verify-sig" />
+                    <button id="verifySigBtn" class="pure-button pure-button-primary">검증</button>
+                </div>
+​
+                <div class="pure-control-group" style="padding-top: 10px;">
+                    <label for="verify-result">서명결과</label>
+                    <input readonly type="text" id="verify-result" />
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</body>
+</html>
