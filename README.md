@@ -1,2 +1,3 @@
 # dids
-dids/Contents
+dids/WebContent - eclipse
+else - smart contract
