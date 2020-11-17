@@ -57,7 +57,7 @@
 		}
 
         $(document).ready(async function () {        	
-        	ethereum.enable;
+            await ethereum.enable();
             web3 = new Web3(web3.currentProvider);
             let mMAccount = await web3.eth.getAccounts();
             let myAccount = mMAccount[0];
