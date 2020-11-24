@@ -334,18 +334,9 @@
           		pub = EthJS.Util.ecrecover(m, v, r, s);
           		adr = '0x' + EthJS.Util.pubToAddress(pub).toString('hex')
           		token = verifyDoc.id.split(':');
-          		
-          		console.log("compare this================================")
-          		console.log(adr);
-          		console.log(token[2])
-          		
-          		//retrievedAddress = web3.utils.toChecksumAddress(adr);
-				//ownAddress = web3.utils.toChecksumAddress(token[2]);
-				
-				//if(retrievedAddress == ownAddress) $("#verify-result").val('true');
-				if(adr == token[2]) $("#verify-result").val('true');
-				else $("#verify-result").val('false');
-				return false;
+          		if(adr == token[2]) $("#verify-result").val('true');
+			else $("#verify-result").val('false');
+			return false;
             });
             //metamask에서 getAccount를 통해 가져오 주소값 세팅 
             $("#eth-address").val(myAccount);
